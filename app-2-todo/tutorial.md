@@ -395,4 +395,90 @@ and also remove the brackets in the html from the `doubledTodos()`.
 Now, you will notice that the value is called only when the value is actually changed.
 
 Meaning - if `todos` is not changed, the `doubledTodos` wont be called.  
-it seems like a minor thing right now, but ideally it can optimize a lot of the code.
+it seems like a minor thing right now, but ideally it can optimize a lot of the code, remmber, computed properties must return something.
+
+---
+### **Watchers**
+Another cool feature that vue probides us, is the option to watch over variables, let's create a watcher.  
+
+This watcher will see if there are any changes in the input field, and if so it will print then, also, it will match, to a certain pattern, lets say, if a user will write "send nudes" it will clear the field, note that the watcher name should be the same as the property name.
+if we watch `inputValue` then we need to name the watchers accordingly.
+```
+const App = {
+    data(){
+        return {
+            title: "Todo List",
+            placeholderString: "Add a new todo",
+            inputValue: '',
+            todos: []
+        }
+    },
+    methods: {},
+    computed: {},
+    watch: {
+        inputValue(value){
+            if (value == "send nudes"){
+                this.inputValue = ''
+                console.log('Input cleared, no nudes for you.')
+            }
+            console.log(`Input value is: ${this.inputValue}`)
+        }
+    }
+}
+```
+---
+### A bit of optimization!
+Let's optimize the code a bit, and make the code even more clear.
+first, we created the binding, and a listener to the input:
+```
+<input type="text"
+:placeholder="placeholderString" 
+:value="inputValue"               <- This
+@input="inputChangeHandler"       <- And this
+@keypress.enter="addTodo"
+>
+```
+When using vue, we don't really need to use it, we can use a better option, called `v-model` [More info](https://v3.vuejs.org/guide/forms.html).  
+So we will use `v-model` and it will look like this:
+```
+<input type="text"
+:placeholder="placeholderString" 
+v-model="inputValue"
+@keypress.enter="addTodo"
+>
+```
+and you can remove the `inputChangeHandler` function from `app.js` we don't need anymore.
+
+---
+### Styling with Vue inside HTML
+Vue also allows you to use javascript inside different tags, for example `styles`:
+```
+<h1 :style="{color: 'red'}" >{{ title }}</h1>
+```
+But what if we want something more interesting?
+we can use conditions:
+In this condition we will check if the input is above or under 25 characters, if it's under, the title will be green, else it will be red.
+```
+<h1 :style="{color: inputValue.length < 25 ? 'green' : 'red'}" >{{ title }}</h1>
+```
+The same thing is ofcourse true for `class` attributes, lets wrap the todo item and show it:
+in the code below, we srapped the representation of the todo, we made it so, that if the todo is longer than 10 chars, we will make it bold.
+```
+<span :class="todo.length > 10 ? 'bold' : ''">{{index}} : {{ todo }}</span>
+```
+Another way to do it:
+we set "primary" to always be true while showing the todo, and `bold` to be added only if the todo is longer then 10.
+```
+<span :class="{
+    'primary':true,
+    'bold': todo.length > 10
+}">{{index}} : {{ todo }}</span>
+```
+And yet another way:
+```
+<span :class="['primary', {'bold': todo.length > 10}]">{{index}} : {{ todo }}</span>
+```
+
+All three of these ways are doing the exact same thing.
+
+# We're done for this part!

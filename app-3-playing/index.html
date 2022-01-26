@@ -17,7 +17,15 @@
 <body>
     <div class="container" id="app" v-cloak>
         <div class="card center">
-
+            <div v-html="rawHtml"></div>
+            <h2 v-text="title"></h2>
+            <ul class="list" v-if="items.length">
+                <li class="list-item" v-for="(item,index) in evenItems" v-bind:key=" item">
+                    <strong>{{item}}</strong>
+                    <input type="text">
+                </li>
+            </ul>
+            <h1 v-else>No elements left :(</h1>
         </div>
     </div>
     <script src="https://unpkg.com/vue@next"></script>
